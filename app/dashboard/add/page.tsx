@@ -21,8 +21,6 @@ export default async function ProtectedPage() {
   return (
     <div className="container mx-auto px-4">
       <h1 className="text-2xl font-bold text-center my-8">Add New Part</h1>
-      <XMLPartDataDownload />
-      <AllPartImagesDownload />
       <PartsForm />
       <DescriptionForm />
       <PackageForm />

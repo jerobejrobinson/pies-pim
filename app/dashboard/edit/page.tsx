@@ -41,10 +41,8 @@ export default function EditPartPage() {
     }
   }, [searchParams])
 
-  const fetchPartDetails = async (partNumber: any, brandAAIAID: any) => {
+  const fetchPartDetails = async (partNumber: string, brandAAIAID: string) => {
     setIsLoading(true)
-    console.log(partNumber)
-    console.log(brandAAIAID)
     const { data, error } = await supabase
       .from('parts')
       .select('*')
@@ -53,7 +51,7 @@ export default function EditPartPage() {
       .single()
 
     if (error) {
-        console.log(error)
+      console.log(error)
       toast({
         title: "Error",
         description: "Failed to fetch part details.",
@@ -72,7 +70,7 @@ export default function EditPartPage() {
     setIsLoading(false)
   }
 
-  const handleUpdate = async (e: any) => {
+  const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault()
     const { data, error } = await supabase
       .from('parts')
@@ -104,46 +102,51 @@ export default function EditPartPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-4">Edit Part: {partNumber}</h1>
+      <h1 className="text-2xl font-bold mb-6">Edit Part: {partNumber}</h1>
       
-      <form onSubmit={handleUpdate} className="mb-8">
-        <div className="mb-4">
-          <Label htmlFor="partNumber">Part Number</Label>
-          <Input id="partNumber" value={part.partnumber} disabled />
+      <div className="space-y-6">
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h2 className="text-xl font-semibold mb-4">Part Details</h2>
+          <form onSubmit={handleUpdate} className="space-y-4">
+            <div>
+              <Label htmlFor="partNumber">Part Number</Label>
+              <Input id="partNumber" value={part.partnumber} disabled />
+            </div>
+            <div>
+              <Label htmlFor="brandAAIAID">Brand AAIA ID</Label>
+              <Input id="brandAAIAID" value={part.brandaaiaid} disabled />
+            </div>
+            <div>
+              <Label htmlFor="partTerminologyID">Part Terminology ID</Label>
+              <Input 
+                id="partTerminologyID" 
+                value={partTerminologyID} 
+                onChange={(e) => setPartTerminologyID(e.target.value)}
+              />
+            </div>
+            <Button type="submit">Update Part</Button>
+          </form>
         </div>
-        <div className="mb-4">
-          <Label htmlFor="brandAAIAID">Brand AAIA ID</Label>
-          <Input id="brandAAIAID" value={part.brandaaiaid} disabled />
+
+        <div className="bg-gray-50 p-6 rounded-lg shadow">
+          <h2 className="text-xl font-semibold mb-4">Descriptions</h2>
+          <DescriptionsEditor partNumber={partNumber} brandAAIAID={brandAAIAID} />
         </div>
-        <div className="mb-4">
-          <Label htmlFor="partTerminologyID">Part Terminology ID</Label>
-          <Input 
-            id="partTerminologyID" 
-            value={partTerminologyID} 
-            onChange={(e) => setPartTerminologyID(e.target.value)}
-          />
+
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h2 className="text-xl font-semibold mb-4">Digital Assets</h2>
+          <DigitalAssetsEditor partNumber={partNumber} brandAAIAID={brandAAIAID} />
         </div>
-        <Button type="submit">Update Part</Button>
-      </form>
 
-      <div className="mb-8">
-        <DescriptionsEditor partNumber={partNumber} brandAAIAID={brandAAIAID} />
-      </div>
+        <div className="bg-gray-50 p-6 rounded-lg shadow">
+          <h2 className="text-xl font-semibold mb-4">Part Interchange</h2>
+          <PartInterchangeEditor partNumber={partNumber} brandAAIAID={brandAAIAID} />
+        </div>
 
-      <div className="mb-8">
-        {/* <h2 className="text-xl font-semibold mb-4">Part Images</h2> */}
-        <DigitalAssetsEditor partNumber={partNumber} brandAAIAID={brandAAIAID} />
-        {/* <PartImageUpload pn={partNumber} brand={brandAAIAID} /> */}
-      </div>
-
-      <div className="mb-8">
-        <PartInterchangeEditor partNumber={partNumber} brandAAIAID={brandAAIAID} />
-      </div>
-
-      <div className="mb-8">
-        {/* <h2 className="text-xl font-semibold mb-4">Package Information</h2> */}
-        <PackagesEditor partNumber={partNumber} brandAAIAID={brandAAIAID} />
-        {/* <PackageForm pn={partNumber} brand={brandAAIAID} /> */}
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h2 className="text-xl font-semibold mb-4">Package Information</h2>
+          <PackagesEditor partNumber={partNumber} brandAAIAID={brandAAIAID} />
+        </div>
       </div>
     </div>
   )

@@ -9,6 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 import Link from 'next/link'
 import { Search, Edit } from 'lucide-react'
+import CardCount from '@/components/CardCount';
 
 export default function PartsDashboard() {
   const [parts, setParts] = useState<any>([])
@@ -60,7 +61,14 @@ export default function PartsDashboard() {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-4">Parts Dashboard</h1>
-
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
+        <CardCount title="Total Parts" table="parts" />
+        <CardCount title="Descriptions" table="descriptions" />
+        <CardCount title="Digital Assets" table="digitalfileinformation" />
+        <CardCount title="Interchanges" table="partinterchange" />
+        <CardCount title="Packages" table="packages" />
+      </div>
+      <h2 className="text-2xl font-bold mb-4">Search For Part Numbers</h2>
       <form onSubmit={handleSearch} className="mb-4 flex gap-2">
         <Input
           type="text"

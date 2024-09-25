@@ -106,7 +106,7 @@ export default function DigitalAssetsEditor({ partNumber, brandAAIAID }: { partN
     }
 
     const isImageFile = (filename: any) => {
-        const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp']
+        const imageExtensions = ['jpg', 'jpeg', 'png']
         const extension = filename.split('.').pop().toLowerCase()
         return imageExtensions.includes(extension)
     }
