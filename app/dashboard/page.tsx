@@ -95,7 +95,7 @@ export default function PartsDashboard() {
                   <TableCell>{part.brandaaiaid}</TableCell>
                   <TableCell>{part.partterminologyid}</TableCell>
                   <TableCell>
-                    <Link href={`/edit?pn=${part.partnumber}&brand=${part.brandaaiaid}`}>
+                    <Link href={`/dashboard/edit?pn=${part.partnumber}&brand=${part.brandaaiaid}`}>
                       <Button variant="outline" size="sm">
                         <Edit className="h-4 w-4 mr-2" />
                         Edit
