@@ -13,9 +13,9 @@ import WeightConverter from "@/components/WeightConverter";
 
 export default async function Add() {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-8">Part Management Dashboard</h1>
-      
+    <>
+    <div className="w-full bg-gray-100">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">      
       <Card className="mb-8">
         <CardHeader>
           <CardTitle>Bulk Import Parts</CardTitle>
@@ -24,8 +24,10 @@ export default async function Add() {
         <CardContent>
           <BulkImportPartNumbers />
         </CardContent>
-      </Card>
-      
+      </Card>  
+      </div>
+    </div>
+    <div className="container mx-auto px-4 py-8 max-w-7xl sm:px-6 lg:px-8">
       <Tabs defaultValue="parts" className="w-full">
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="parts">Parts</TabsTrigger>
@@ -99,5 +101,6 @@ export default async function Add() {
         </TabsContent>
       </Tabs>
     </div>
+    </>
   );
 }

@@ -101,7 +101,7 @@ export default function EditPartContent() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 max-w-7xl sm:px-6 lg:px-8">
       <h1 className="text-2xl font-bold mb-6">Edit Part: {partNumber}</h1>
       
       <div className="space-y-6">

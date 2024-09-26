@@ -5,6 +5,7 @@ import { createClient } from '@/utils/supabase/client'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
 import { Package, FileText, Image, Repeat, Boxes } from 'lucide-react'
+import { ButtonLink } from './ButtonLink'
 
 interface CountCardProps {
   title: string
@@ -53,6 +54,8 @@ export default function CountCard({ title, table, icon }: CountCardProps) {
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold">{count !== null ? count : 'Loading...'}</div>
+        {table !== 'parts' && (<ButtonLink href={`/dashboard/${table}`} className='mt-2 text-sm'>Add {title}</ButtonLink>)}
+        {table == 'parts' && (<ButtonLink href={`/dashboard`} className='mt-2 text-sm'>Search for Parts</ButtonLink>)}
       </CardContent>
     </Card>
   )

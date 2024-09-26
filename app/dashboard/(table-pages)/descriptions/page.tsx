@@ -8,12 +8,11 @@ import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationEllipsis } from "@/components/ui/pagination"
 import Link from 'next/link'
-import { Search, Edit, AlertCircle } from 'lucide-react'
+import { Search, Edit, AlertCircle, FileText } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import CardCount from '@/components/CardCount'
 import DashboardHeader from '@/components/DashboardHeader'
 
-export default function PartsDashboard() {
+export default function PartsWithoutDescriptions() {
   const [parts, setParts] = useState<any>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -35,7 +34,8 @@ export default function PartsDashboard() {
     try {
       let query = supabase
         .from('parts')
-        .select('*', { count: 'exact' })
+        .select('*, descriptions(*)', { count: 'exact' })
+        .is('descriptions', null)
         .range((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage - 1)
 
       if (searchTerm) {
@@ -160,9 +160,9 @@ export default function PartsDashboard() {
 
   return (
     <>
-    <DashboardHeader title={'Parts Dashboard'}/>
+    <DashboardHeader title={'Descriptions Dashboard'}/>
     <div className="container mx-auto px-4 py-8 max-w-7xl sm:px-6 lg:px-8">
-      <h2 className="text-2xl font-bold mb-4">Search For Part Numbers</h2>
+      <h2 className="text-2xl font-bold mb-4">Search For Part Numbers Without Descriptions</h2>
       <form onSubmit={handleSearch} className="mb-4 flex gap-2">
         <Input
           type="text"
@@ -218,7 +218,7 @@ export default function PartsDashboard() {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center">No parts found</TableCell>
+                    <TableCell colSpan={4} className="text-center">No parts without descriptions found</TableCell>
                   </TableRow>
                 )}
               </TableBody>
