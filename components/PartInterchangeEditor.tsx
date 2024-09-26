@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
-import { Pencil, Plus, X } from 'lucide-react'
+import { Pencil, Plus, X, Trash2 } from 'lucide-react'
 
 export default function PartInterchangeEditor({ partNumber, brandAAIAID }: {partNumber: string; brandAAIAID: string}) {
   const [interchanges, setInterchanges] = useState<any>([])
   const [isEditing, setIsEditing] = useState(false)
-  const [editingIndex, setEditingIndex] = useState(null)
+  const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [newInterchange, setNewInterchange] = useState({
     interchangepartnumber: '',
     _brandaaiaid: ''
@@ -40,7 +40,7 @@ export default function PartInterchangeEditor({ partNumber, brandAAIAID }: {part
     }
   }
 
-  const handleEdit = (index: any) => {
+  const handleEdit = (index: number) => {
     setIsEditing(true)
     setEditingIndex(index)
     setNewInterchange(interchanges[index])
@@ -98,18 +98,43 @@ export default function PartInterchangeEditor({ partNumber, brandAAIAID }: {part
     })
   }
 
+  const handleDelete = async (id: string) => {
+    const { error } = await supabase
+      .from('partinterchange')
+      .delete()
+      .eq('id', id)
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete part interchange.",
+        variant: "destructive",
+      })
+    } else {
+      toast({
+        title: "Success",
+        description: "Part interchange deleted successfully.",
+      })
+      fetchInterchanges()
+    }
+  }
+
   return (
     <div className="mt-6">
-      <h3 className="text-lg font-semibold mb-2">Part Interchanges</h3>
-      {interchanges.map((interchange: any, index: any) => (
+      {interchanges.map((interchange: any, index: number) => (
         <div key={interchange.id} className="mb-2 p-2 border rounded flex justify-between items-center">
           <div>
             <p><strong>Interchange Part Number:</strong> {interchange.interchangepartnumber}</p>
             <p><strong>Brand AAIA ID:</strong> {interchange._brandaaiaid}</p>
           </div>
-          <Button variant="ghost" size="sm" onClick={() => handleEdit(index)}>
-            <Pencil className="h-4 w-4" />
-          </Button>
+          <div className="flex space-x-2">
+            <Button variant="ghost" size="sm" onClick={() => handleEdit(index)}>
+              <Pencil className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => handleDelete(interchange.id)}>
+              <Trash2 className="h-4 w-4 text-red-500" />
+            </Button>
+          </div>
         </div>
       ))}
       {isEditing && (

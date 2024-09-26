@@ -5,8 +5,21 @@ import { createClient } from '@/utils/supabase/client'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
+import { Search } from 'lucide-react'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+
+interface Part {
+  partnumber: string;
+  brandaaiaid: string;
+}
 
 export default function PackageForm({pn, brand}: {pn?: string; brand?: string}) {
   const [partNumber, setPartNumber] = useState('')
@@ -15,23 +28,44 @@ export default function PackageForm({pn, brand}: {pn?: string; brand?: string}) 
   const [shippingWidth, setShippingWidth] = useState('')
   const [shippingLength, setShippingLength] = useState('')
   const [weight, setWeight] = useState('')
-  const [parts, setParts] = useState<any>([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [filteredParts, setFilteredParts] = useState<Part[]>([])
+  const [isSearchPerformed, setIsSearchPerformed] = useState(false)
 
   const supabase = createClient()
   const { toast } = useToast()
 
   useEffect(() => {
-    if(!pn && !brand) {
-      fetchParts()
+    if(pn && brand) {
+      setPartNumber(pn)
+      setBrandAAIAID(brand)
     }
-  }, [])
+  }, [pn, brand])
 
-  const fetchParts = async () => {
+  const handleSearch = async () => {
+    if (searchTerm.trim() === '') {
+      setFilteredParts([])
+      setIsSearchPerformed(false)
+      return
+    }
+
     const { data, error } = await supabase
       .from('parts')
       .select('partnumber, brandaaiaid')
-    if (data) setParts(data)
-    if (error) console.error('Error fetching parts:', error)
+      .or(`partnumber.ilike.%${searchTerm}%,brandaaiaid.ilike.%${searchTerm}%`)
+      .limit(50)
+
+    if (error) {
+      console.error('Error searching parts:', error)
+      toast({
+        title: "Error",
+        description: "Failed to search parts. Please try again.",
+        variant: "destructive",
+      })
+    } else {
+      setFilteredParts(data || [])
+      setIsSearchPerformed(true)
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -75,69 +109,116 @@ export default function PackageForm({pn, brand}: {pn?: string; brand?: string}) 
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto mt-10">
-      {!pn && !brand && (<div>
-        <Label htmlFor="partSelect">Select Part</Label>
-        <Select onValueChange={(value) => {
-          const [pn, baaid] = value.split('|')
-          setPartNumber(pn)
-          setBrandAAIAID(baaid)
-        }}>
-          <SelectTrigger>
-            <SelectValue placeholder="Select a part" />
-          </SelectTrigger>
-          <SelectContent>
-            {parts.map((part: any) => (
-              <SelectItem key={`${part.partnumber}|${part.brandaaiaid}`} value={`${part.partnumber}|${part.brandaaiaid}`}>
-                {part.partnumber} - {part.brandaaiaid}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>)}
-      <div>
-        <Label htmlFor="shippingDimensions">Shipping Dimensions (H x W x L)</Label>
-        <div className="flex space-x-2">
-          <Input 
-            id="shippingHeight" 
-            type="number" 
-            step="0.01"
-            value={shippingHeight} 
-            onChange={(e) => setShippingHeight(e.target.value)} 
-            placeholder="Height" 
-            required 
-          />
-          <Input 
-            id="shippingWidth" 
-            type="number" 
-            step="0.01"
-            value={shippingWidth} 
-            onChange={(e) => setShippingWidth(e.target.value)} 
-            placeholder="Width" 
-            required 
-          />
-          <Input 
-            id="shippingLength" 
-            type="number" 
-            step="0.01"
-            value={shippingLength} 
-            onChange={(e) => setShippingLength(e.target.value)} 
-            placeholder="Length" 
-            required 
-          />
+      {!pn && !brand && (
+        <div className="space-y-4">
+          <div className="flex items-center space-x-2">
+            <Input
+              type="text"
+              placeholder="Search by Part Number or Brand AAIA ID"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="flex-grow"
+            />
+            <Button type="button" variant="outline" onClick={handleSearch}>
+              <Search className="h-4 w-4" />
+            </Button>
+          </div>
+          {isSearchPerformed && (
+            <div className="max-h-60 overflow-y-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Part Number</TableHead>
+                    <TableHead>Brand AAIA ID</TableHead>
+                    <TableHead>Action</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredParts.length > 0 ? (
+                    filteredParts.map((part) => (
+                      <TableRow key={`${part.partnumber}|${part.brandaaiaid}`}>
+                        <TableCell>{part.partnumber}</TableCell>
+                        <TableCell>{part.brandaaiaid}</TableCell>
+                        <TableCell>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setPartNumber(part.partnumber)
+                              setBrandAAIAID(part.brandaaiaid)
+                            }}
+                          >
+                            Select
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={3} className="text-center">No results found</TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          )}
         </div>
-      </div>
-      <div>
-        <Label htmlFor="weight">Weight</Label>
-        <Input 
-          id="weight" 
-          type="number" 
-          step="0.01" 
-          value={weight} 
-          onChange={(e) => setWeight(e.target.value)} 
-          required 
-        />
-      </div>
-      <Button type="submit" className="w-full">Add Package Information</Button>
+      )}
+
+      {(partNumber && brandAAIAID) || (pn && brand) ? (
+        <>
+          <div>
+            <Label htmlFor="selectedPart">Selected Part</Label>
+            <Input id="selectedPart" value={`${partNumber || pn} - ${brandAAIAID || brand}`} disabled />
+          </div>
+
+          <div>
+            <Label htmlFor="shippingDimensions">Shipping Dimensions (H x W x L)</Label>
+            <div className="flex space-x-2">
+              <Input 
+                id="shippingHeight" 
+                type="number" 
+                step="0.01"
+                value={shippingHeight} 
+                onChange={(e) => setShippingHeight(e.target.value)} 
+                placeholder="Height" 
+                required 
+              />
+              <Input 
+                id="shippingWidth" 
+                type="number" 
+                step="0.01"
+                value={shippingWidth} 
+                onChange={(e) => setShippingWidth(e.target.value)} 
+                placeholder="Width" 
+                required 
+              />
+              <Input 
+                id="shippingLength" 
+                type="number" 
+                step="0.01"
+                value={shippingLength} 
+                onChange={(e) => setShippingLength(e.target.value)} 
+                placeholder="Length" 
+                required 
+              />
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="weight">Weight</Label>
+            <Input 
+              id="weight" 
+              type="number" 
+              step="0.01" 
+              value={weight} 
+              onChange={(e) => setWeight(e.target.value)} 
+              required 
+            />
+          </div>
+          <Button type="submit" className="w-full">Add Package Information</Button>
+        </>
+      ) : null}
     </form>
   )
 }

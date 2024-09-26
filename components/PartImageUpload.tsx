@@ -7,39 +7,71 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
-import { Upload } from 'lucide-react'
+import { Upload, Search } from 'lucide-react'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+
+interface Part {
+  partnumber: string;
+  brandaaiaid: string;
+}
 
 export default function PartImageUpload({pn, brand}: {pn?: string; brand?: string}) {
   const [partNumber, setPartNumber] = useState('')
   const [brandAAIAID, setBrandAAIAID] = useState('')
   const [fileName, setFileName] = useState('')
-  const [fileType, setFileType] = useState('')
   const [assetType, setAssetType] = useState('')
   const [file, setFile] = useState<File | null>(null)
-  const [parts, setParts] = useState<any>([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [filteredParts, setFilteredParts] = useState<Part[]>([])
+  const [isSearchPerformed, setIsSearchPerformed] = useState(false)
 
   const supabase = createClient()
   const { toast } = useToast()
 
   useEffect(() => {
-    if(!pn && !brand) {
-      fetchParts()
+    if(pn && brand) {
+      setPartNumber(pn)
+      setBrandAAIAID(brand)
     }
-  }, [])
+  }, [pn, brand])
 
-  const fetchParts = async () => {
+  const handleSearch = async () => {
+    if (searchTerm.trim() === '') {
+      setFilteredParts([])
+      setIsSearchPerformed(false)
+      return
+    }
+
     const { data, error } = await supabase
       .from('parts')
       .select('partnumber, brandaaiaid')
-    if (data) setParts(data)
-    if (error) console.error('Error fetching parts:', error)
+      .or(`partnumber.ilike.%${searchTerm}%,brandaaiaid.ilike.%${searchTerm}%`)
+      .limit(50)
+
+    if (error) {
+      console.error('Error searching parts:', error)
+      toast({
+        title: "Error",
+        description: "Failed to search parts. Please try again.",
+        variant: "destructive",
+      })
+    } else {
+      setFilteredParts(data || [])
+      setIsSearchPerformed(true)
+    }
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0])
       setFileName(e.target.files[0].name)
-      setFileType(e.target.files[0].type)
     }
   }
 
@@ -64,7 +96,7 @@ export default function PartImageUpload({pn, brand}: {pn?: string; brand?: strin
       .upload(filePath, file)
 
     if (uploadError) {
-        console.log(uploadError)
+      console.log(uploadError)
       toast({
         title: "Error",
         description: "Failed to upload image",
@@ -105,7 +137,6 @@ export default function PartImageUpload({pn, brand}: {pn?: string; brand?: strin
       })
       // Reset form
       setFileName('')
-      setFileType('')
       setAssetType('')
       setFile(null)
     }
@@ -113,53 +144,99 @@ export default function PartImageUpload({pn, brand}: {pn?: string; brand?: strin
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto mt-10">
-      {!pn && !brand && (<div>
-        <Label htmlFor="partSelect">Select Part</Label>
-        <Select onValueChange={(value) => {
-          const [pn, baaid] = value.split('|')
-          setPartNumber(pn)
-          setBrandAAIAID(baaid)
-        }}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select a part" />
-          </SelectTrigger>
-          <SelectContent>
-            {parts.map((part: any) => (
-              <SelectItem key={`${part.partnumber}|${part.brandaaiaid}`} value={`${part.partnumber}|${part.brandaaiaid}`}>
-                {part.partnumber} - {part.brandaaiaid}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>)}
+      {!pn && !brand && (
+        <div className="space-y-4">
+          <div className="flex items-center space-x-2">
+            <Input
+              type="text"
+              placeholder="Search by Part Number or Brand AAIA ID"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="flex-grow"
+            />
+            <Button type="button" variant="outline" onClick={handleSearch}>
+              <Search className="h-4 w-4" />
+            </Button>
+          </div>
+          {isSearchPerformed && (
+            <div className="max-h-60 overflow-y-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Part Number</TableHead>
+                    <TableHead>Brand AAIA ID</TableHead>
+                    <TableHead>Action</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredParts.length > 0 ? (
+                    filteredParts.map((part) => (
+                      <TableRow key={`${part.partnumber}|${part.brandaaiaid}`}>
+                        <TableCell>{part.partnumber}</TableCell>
+                        <TableCell>{part.brandaaiaid}</TableCell>
+                        <TableCell>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setPartNumber(part.partnumber)
+                              setBrandAAIAID(part.brandaaiaid)
+                            }}
+                          >
+                            Select
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={3} className="text-center">No results found</TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </div>
+      )}
 
-      <div>
-        <Label htmlFor="file">Upload Image</Label>
-        <Input 
-          id="file" 
-          type="file" 
-          onChange={handleFileChange}
-          accept=".png, .jpg, .jpeg"
-          required 
-        />
-      </div>
+      {partNumber && brandAAIAID && (
+        <>
+          <div>
+            <Label htmlFor="selectedPart">Selected Part</Label>
+            <Input id="selectedPart" value={`${partNumber} - ${brandAAIAID}`} disabled />
+          </div>
 
-      <div>
-        <Label htmlFor="maintenanceType">Image Type</Label>
-        <Select onValueChange={(value) => setAssetType(value)} value={assetType || ""}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select Image Type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="P04">Main Image</SelectItem>
-            <SelectItem value="P01">Secondary Image</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+          <div>
+            <Label htmlFor="file">Upload Image</Label>
+            <Input 
+              id="file" 
+              type="file" 
+              onChange={handleFileChange}
+              accept=".png, .jpg, .jpeg"
+              required 
+            />
+          </div>
 
-      <Button type="submit" className="w-full">
-        <Upload className="mr-2 h-4 w-4" /> Upload Image and Add Information
-      </Button>
+          <div>
+            <Label htmlFor="maintenanceType">Image Type</Label>
+            <Select onValueChange={(value) => setAssetType(value)} value={assetType || ""}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select Image Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="P04">Main Image</SelectItem>
+                <SelectItem value="P01">Secondary Image</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Button type="submit" className="w-full">
+            <Upload className="mr-2 h-4 w-4" /> Upload Image and Add Information
+          </Button>
+        </>
+      )}
     </form>
   )
 }

@@ -214,7 +214,7 @@ export default function DigitalAssetsEditor({ partNumber, brandAAIAID }: { partN
 
     return (
         <div className="mt-6">
-            <h3 className="text-lg font-semibold mb-2">Digital Assets</h3>
+            {/* <h3 className="text-lg font-semibold mb-2">Digital Assets</h3> */}
             {assets.map((asset: any, index: any) => (
                 <div key={asset.id} className="mb-2 p-2 border rounded flex justify-between items-center">
                     <div className="flex items-center space-x-4">

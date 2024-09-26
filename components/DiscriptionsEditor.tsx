@@ -5,12 +5,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import { Pencil, Plus, X } from 'lucide-react'
+import { Pencil, Plus, X, Trash2 } from 'lucide-react'
 
 export default function DescriptionsEditor({ partNumber, brandAAIAID }: {partNumber: string; brandAAIAID: string}) {
   const [descriptions, setDescriptions] = useState<any>([])
   const [isEditing, setIsEditing] = useState(false)
-  const [editingIndex, setEditingIndex] = useState(null)
+  const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [newDescription, setNewDescription] = useState({
     _text: '',
     _descriptioncode: ''
@@ -41,7 +41,7 @@ export default function DescriptionsEditor({ partNumber, brandAAIAID }: {partNum
     }
   }
 
-  const handleEdit = (index: any) => {
+  const handleEdit = (index: number) => {
     setIsEditing(true)
     setEditingIndex(index)
     setNewDescription(descriptions[index])
@@ -99,18 +99,43 @@ export default function DescriptionsEditor({ partNumber, brandAAIAID }: {partNum
     })
   }
 
+  const handleDelete = async (id: string) => {
+    const { error } = await supabase
+      .from('descriptions')
+      .delete()
+      .eq('id', id)
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete description.",
+        variant: "destructive",
+      })
+    } else {
+      toast({
+        title: "Success",
+        description: "Description deleted successfully.",
+      })
+      fetchDescriptions()
+    }
+  }
+
   return (
     <div className="mt-6">
-      <h3 className="text-lg font-semibold mb-2">Descriptions</h3>
-      {descriptions.map((desc: any, index: any) => (
+      {descriptions.map((desc: any, index: number) => (
         <div key={desc.id} className="mb-2 p-2 border rounded flex justify-between items-center">
           <div>
             <p><strong>Text:</strong> {desc._text}</p>
             <p><strong>Code:</strong> {desc._descriptioncode}</p>
           </div>
-          <Button variant="ghost" size="sm" onClick={() => handleEdit(index)}>
-            <Pencil className="h-4 w-4" />
-          </Button>
+          <div className="flex space-x-2">
+            <Button variant="ghost" size="sm" onClick={() => handleEdit(index)}>
+              <Pencil className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => handleDelete(desc.id)}>
+              <Trash2 className="h-4 w-4 text-red-500" />
+            </Button>
+          </div>
         </div>
       ))}
       {isEditing && (

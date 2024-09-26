@@ -114,7 +114,7 @@ export default function PackagesEditor({ partNumber, brandAAIAID }: { partNumber
 
   return (
     <div className="mt-6">
-      <h3 className="text-lg font-semibold mb-2">Packages</h3>
+      {/* <h3 className="text-lg font-semibold mb-2">Packages</h3> */}
       {packages.map((pkg: any, index: any) => (
         <div key={pkg.id} className="mb-2 p-2 border rounded flex justify-between items-center">
           <div>
