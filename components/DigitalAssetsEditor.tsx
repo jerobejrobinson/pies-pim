@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { Button } from "@/components/ui/button"
@@ -11,14 +13,15 @@ import Image from 'next/image'
 export default function DigitalAssetsEditor({ partNumber, brandAAIAID }: { partNumber: string; brandAAIAID: string }) {
     const [assets, setAssets] = useState<any>([])
     const [isEditing, setIsEditing] = useState(false)
-    const [editingIndex, setEditingIndex] = useState(null)
+    const [editingIndex, setEditingIndex] = useState<number | null>(null)
     const [newAsset, setNewAsset] = useState({
         filename: '',
         filetype: '',
         assettype: '',
-        _maintenancetype: ''
+        _maintenancetype: '',
+        imageurl: ''
     })
-    const [uploadingFile, setUploadingFile] = useState<any>(null)
+    const [uploadingFile, setUploadingFile] = useState<File | null>(null)
 
     const supabase = createClient()
     const { toast } = useToast()
@@ -45,7 +48,7 @@ export default function DigitalAssetsEditor({ partNumber, brandAAIAID }: { partN
         }
     }
 
-    const handleEdit = (index: any) => {
+    const handleEdit = (index: number) => {
         setIsEditing(true)
         setEditingIndex(index)
         setNewAsset(assets[index])
@@ -101,23 +104,24 @@ export default function DigitalAssetsEditor({ partNumber, brandAAIAID }: { partN
             filename: '',
             filetype: '',
             assettype: '',
-            _maintenancetype: ''
+            _maintenancetype: '',
+            imageurl: ''
         })
     }
 
-    const isImageFile = (filename: any) => {
-        const imageExtensions = ['jpg', 'jpeg', 'png']
-        const extension = filename.split('.').pop().toLowerCase()
+    const isImageFile = (filename: string) => {
+        const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp']
+        const extension = filename.split('.').pop()?.toLowerCase() || ''
         return imageExtensions.includes(extension)
     }
 
-    const getImageUrl = (filename: any) => {
+    const getImageUrl = (filename: string) => {
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
         return `${supabaseUrl}/storage/v1/object/public/part-images/${filename}`
     }
 
-    const handleFileChange = (e: any) => {
-        const file = e.target.files[0]
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
         if (file) {
             setUploadingFile(file)
         }
@@ -136,7 +140,7 @@ export default function DigitalAssetsEditor({ partNumber, brandAAIAID }: { partN
         const fileExt = uploadingFile.name.split('.').pop()
         const filePath = `${partNumber}${brandAAIAID}/${Math.random().toString(36).substring(2)}.${fileExt}`
 
-        const { error: uploadError } = await supabase.storage
+        const { data: uploadData, error: uploadError } = await supabase.storage
             .from('part-images')
             .upload(filePath, uploadingFile)
 
@@ -149,14 +153,17 @@ export default function DigitalAssetsEditor({ partNumber, brandAAIAID }: { partN
             return
         }
 
+        const imageUrl = getImageUrl(filePath)
+
         const { error: insertError } = await supabase
             .from('digitalfileinformation')
             .insert({
                 partnumber: partNumber,
                 brandaaiaid: brandAAIAID,
                 filename: filePath,
-                filetype: uploadingFile.type,
+                filetype: fileExt,
                 assettype: 'P01',
+                imageurl: imageUrl
             })
 
         if (insertError) {
@@ -214,14 +221,13 @@ export default function DigitalAssetsEditor({ partNumber, brandAAIAID }: { partN
 
     return (
         <div className="mt-6">
-            {/* <h3 className="text-lg font-semibold mb-2">Digital Assets</h3> */}
-            {assets.map((asset: any, index: any) => (
+            {assets.map((asset: any, index: number) => (
                 <div key={asset.id} className="mb-2 p-2 border rounded flex justify-between items-center">
                     <div className="flex items-center space-x-4">
                         {isImageFile(asset.filename) ? (
                             <div className="relative w-16 h-16 border rounded overflow-hidden">
                                 <Image
-                                    src={getImageUrl(asset.filename)}
+                                    src={asset.imageurl || getImageUrl(asset.filename)}
                                     alt={`Thumbnail for ${asset.filename}`}
                                     width={64}
                                     height={64}
@@ -272,7 +278,7 @@ export default function DigitalAssetsEditor({ partNumber, brandAAIAID }: { partN
                         <Input
                             type="file"
                             onChange={handleFileChange}
-                            accept=".png, .jpg, .jpeg"
+                            accept=".png, .jpg, .jpeg, .gif, .webp"
                             className="flex-grow"
                         />
                         <Button onClick={handleUpload} disabled={!uploadingFile}>

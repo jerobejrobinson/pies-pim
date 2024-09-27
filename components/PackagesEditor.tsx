@@ -54,12 +54,12 @@ export default function PackagesEditor({ partNumber, brandAAIAID }: { partNumber
       const { error } = await supabase
         .from('packages')
         .update({ 
-            merchandisingheight: parseFloat(newPackage.shippingheight),
-            merchandisingwidth: parseFloat(newPackage.shippingwidth),
-            merchandisinglength: parseFloat(newPackage.shippinglength),
-            shippingheight: parseFloat(newPackage.shippingheight),
-            shippingwidth: parseFloat(newPackage.shippingwidth),
-            shippinglength: parseFloat(newPackage.shippinglength),
+            merchandisingheight: parseFloat(newPackage.shippingheight).toFixed(4),
+            merchandisingwidth: parseFloat(newPackage.shippingwidth).toFixed(4),
+            merchandisinglength: parseFloat(newPackage.shippinglength).toFixed(4),
+            shippingheight: parseFloat(newPackage.shippingheight).toFixed(4),
+            shippingwidth: parseFloat(newPackage.shippingwidth).toFixed(4),
+            shippinglength: parseFloat(newPackage.shippinglength).toFixed(4),
             weight: parseFloat(newPackage.weight),
             dimensionalweight: dimW.toFixed(4)
           })

@@ -37,11 +37,24 @@ export default function AllPartImagesDownload() {
       const zip = new JSZip()
 
       // Add each image to the zip file
-      const imagePromises = fileData.map(async (file) => {
-        const response = await fetch(file.imageurl)
-        const blob = await response.blob()
-        // Use a folder structure in the zip: partnumber_brandaaiaid/filename
-        zip.file(`${file.filename}`, blob)
+      const imagePromises = fileData.map(async (file, index) => {
+        try {
+          const response = await fetch(file.imageurl)
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+          const blob = await response.blob()
+          
+          // Get file extension from the URL or use a default
+          const urlParts = file.imageurl.split('.')
+          // const fileExtension = urlParts.length > 1 ? `.${urlParts[urlParts.length - 1]}` : '.jpg'
+          
+          // Use a folder structure in the zip: partnumber_brandaaiaid/filename
+          const fileName = `${file.filename}`
+          zip.file(fileName, blob, {binary: true})
+        } catch (error: any) {
+          console.error(`Error downloading image ${file.imageurl}:`, error)
+          // Add a text file with error information instead of the image
+          zip.file(`error_log/${index}_${file.filename}.txt`, `Error downloading ${file.imageurl}: ${error.message}`)
+        }
       })
 
       await Promise.all(imagePromises)
@@ -52,20 +65,20 @@ export default function AllPartImagesDownload() {
       // Create a download link and trigger the download
       const link = document.createElement('a')
       link.href = URL.createObjectURL(content)
-      link.download = `all_part_images.zip`
+      link.download = 'all_part_images.zip'
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
 
       toast({
         title: "Success",
-        description: "All images downloaded successfully",
+        description: "All images downloaded successfully. Check error_log folder for any download issues.",
       })
     } catch (error) {
       console.error('Error downloading images:', error)
       toast({
         title: "Error",
-        description: "Failed to download images",
+        description: "Failed to download images. Please check the console for more details.",
         variant: "destructive",
       })
     } finally {
