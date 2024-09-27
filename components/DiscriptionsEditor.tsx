@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import { Pencil, Plus, X, Trash2 } from 'lucide-react'
+import CDATARenderer from '@/components/CDATARender'
 
 export default function DescriptionsEditor({ partNumber, brandAAIAID }: {partNumber: string; brandAAIAID: string}) {
   const [descriptions, setDescriptions] = useState<any>([])
@@ -125,7 +126,7 @@ export default function DescriptionsEditor({ partNumber, brandAAIAID }: {partNum
       {descriptions.map((desc: any, index: number) => (
         <div key={desc.id} className="mb-2 p-2 border rounded flex justify-between items-center">
           <div>
-            <p><strong>Text:</strong> {desc._text}</p>
+            <CDATARenderer content={desc._text} />
             <p><strong>Code:</strong> {desc._descriptioncode}</p>
           </div>
           <div className="flex space-x-2">
