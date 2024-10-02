@@ -10,7 +10,7 @@ import BulkImportPackages from "@/components/BulkImportPackages";
 import BulkImportPartInterchanges from "@/components/BulkImportPartInterchanges";
 import BulkImportDescriptions from "@/components/BulkImportDescriptions";
 import WeightConverter from "@/components/WeightConverter";
-
+import PartTermSearch from '@/components/PartTermSearch'
 export default async function Add() {
   return (
     <>
@@ -38,12 +38,13 @@ export default async function Add() {
         </TabsList>
         <TabsContent value="parts">
           <Card>
-            <CardHeader>
+            <CardHeader className="bg-slate-100">
               <CardTitle>Add New Part</CardTitle>
               <CardDescription>Enter the details for a new part</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="grid grid-cols-2 p-0">
               <PartsForm />
+              <PartTermSearch />
             </CardContent>
           </Card>
         </TabsContent>

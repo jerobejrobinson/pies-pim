@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
-import { Pencil, Plus, X, Trash2 } from 'lucide-react'
+import { Pencil, Plus, X, Trash2, Upload } from 'lucide-react'
+import { Textarea } from "@/components/ui/textarea"
 
 export default function PartInterchangeEditor({ partNumber, brandAAIAID }: {partNumber: string; brandAAIAID: string}) {
   const [interchanges, setInterchanges] = useState<any>([])
@@ -14,6 +15,7 @@ export default function PartInterchangeEditor({ partNumber, brandAAIAID }: {part
     interchangepartnumber: '',
     _brandaaiaid: ''
   })
+  const [bulkInterchanges, setBulkInterchanges] = useState('')
 
   const supabase = createClient()
   const { toast } = useToast()
@@ -119,6 +121,36 @@ export default function PartInterchangeEditor({ partNumber, brandAAIAID }: {part
     }
   }
 
+  const handleBulkUpload = async () => {
+    const partNumbers = bulkInterchanges.split(/[\t,\n]+/).map(pn => pn.trim()).filter(pn => pn !== '')
+    
+    const newInterchanges = partNumbers.map(pn => ({
+      interchangepartnumber: pn,
+      _brandaaiaid: brandAAIAID,
+      partnumber: partNumber,
+      brandaaiaid: brandAAIAID
+    }))
+
+    const { data, error } = await supabase
+      .from('partinterchange')
+      .insert(newInterchanges)
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add bulk part interchanges.",
+        variant: "destructive",
+      })
+    } else {
+      toast({
+        title: "Success",
+        description: `${newInterchanges.length} part interchanges added successfully.`,
+      })
+      fetchInterchanges()
+      setBulkInterchanges('')
+    }
+  }
+
   return (
     <div className="mt-6">
       {interchanges.map((interchange: any, index: number) => (
@@ -160,9 +192,25 @@ export default function PartInterchangeEditor({ partNumber, brandAAIAID }: {part
         </div>
       )}
       {!isEditing && (
-        <Button onClick={() => setIsEditing(true)} className="mt-2">
-          <Plus className="h-4 w-4 mr-2" /> Add Part Interchange
-        </Button>
+        <div className="mt-4 space-y-4">
+          <Button onClick={() => setIsEditing(true)} className="w-full">
+            <Plus className="h-4 w-4 mr-2" /> Add Single Part Interchange
+          </Button>
+          <div className="p-4 border rounded">
+            <Label htmlFor="bulkInterchanges">Bulk Add Part Interchanges</Label>
+            <Textarea
+              id="bulkInterchanges"
+              value={bulkInterchanges}
+              onChange={(e) => setBulkInterchanges(e.target.value)}
+              placeholder="Paste part numbers separated by tabs, commas, or new lines"
+              className="mb-2"
+              rows={5}
+            />
+            <Button onClick={handleBulkUpload} className="w-full">
+              <Upload className="h-4 w-4 mr-2" /> Upload Bulk Interchanges
+            </Button>
+          </div>
+        </div>
       )}
     </div>
   )

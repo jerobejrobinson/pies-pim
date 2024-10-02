@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
+import PartTermSearch from '@/components/PartTermSearch'
 
 export default function PartsForm() {
   const [partNumber, setPartNumber] = useState('')
@@ -47,7 +48,7 @@ export default function PartsForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto mt-10">
+    <form onSubmit={handleSubmit} className="space-y-4 w-full mx-auto mt-10 p-4">
       <div>
         <Label htmlFor="partNumber">Part Number</Label>
         <Input 
@@ -76,6 +77,7 @@ export default function PartsForm() {
           onChange={(e) => setPartTerminologyID(e.target.value)} 
         />
       </div>
+      {/* <PartTermSearch /> */}
       <Button type="submit" className="w-full">Add Part</Button>
     </form>
   )
