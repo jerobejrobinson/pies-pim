@@ -49,8 +49,8 @@ export default function PackagesEditor({ partNumber, brandAAIAID }: { partNumber
   }
 
   const handleSave = async () => {
+    let dimW = parseFloat(newPackage.shippinglength) * parseFloat(newPackage.shippingwidth) * parseFloat(newPackage.shippingheight) / 139
     if (editingIndex !== null) {
-        let dimW = parseFloat(newPackage.shippinglength) * parseFloat(newPackage.shippingwidth) * parseFloat(newPackage.shippingheight) / 139
       const { error } = await supabase
         .from('packages')
         .update({ 
@@ -82,7 +82,14 @@ export default function PackagesEditor({ partNumber, brandAAIAID }: { partNumber
       const { error } = await supabase
         .from('packages')
         .insert({
-          ...newPackage,
+          merchandisingheight: parseFloat(newPackage.shippingheight).toFixed(4),
+          merchandisingwidth: parseFloat(newPackage.shippingwidth).toFixed(4),
+          merchandisinglength: parseFloat(newPackage.shippinglength).toFixed(4),
+          shippingheight: parseFloat(newPackage.shippingheight).toFixed(4),
+          shippingwidth: parseFloat(newPackage.shippingwidth).toFixed(4),
+          shippinglength: parseFloat(newPackage.shippinglength).toFixed(4),
+          weight: parseFloat(newPackage.weight),
+          dimensionalweight: dimW.toFixed(4),
           partnumber: partNumber,
           brandaaiaid: brandAAIAID
         })
