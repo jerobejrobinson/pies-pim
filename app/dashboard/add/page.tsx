@@ -10,6 +10,7 @@ import BulkImportPackages from "@/components/BulkImportPackages";
 import BulkImportPartInterchanges from "@/components/BulkImportPartInterchanges";
 import BulkImportDescriptions from "@/components/BulkImportDescriptions";
 import WeightConverter from "@/components/WeightConverter";
+import PartsInterchangeConverter from "@/components/PartsInterchangeConverter";
 import PartTermSearch from '@/components/PartTermSearch'
 export default async function Add() {
   return (
@@ -71,7 +72,7 @@ export default async function Add() {
               <BulkImportPackages />
               <hr />
               <PackageForm />
-              <hr className=" my-6"/>
+              <hr className="my-6"/>
               <WeightConverter />
             </CardContent>
           </Card>
@@ -86,6 +87,8 @@ export default async function Add() {
               <BulkImportPartInterchanges />
               <hr />
               <PartInterchangeForm />
+              <hr  className="my-6" />
+              <PartsInterchangeConverter />
             </CardContent>
           </Card>
         </TabsContent>

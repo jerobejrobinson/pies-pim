@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { ChevronRight, ChevronDown, Search } from "lucide-react"
-import categories from '@/lib/partterms'
+import categories from '@/lib/partterms_v2'
 
 interface Category {
   id: number
