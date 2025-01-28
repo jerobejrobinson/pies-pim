@@ -1,14 +1,15 @@
 'use client'
-
 import { useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
+import { useRouter } from 'next/navigation';
 import PartTermSearch from '@/components/PartTermSearch'
 
 export default function PartsForm() {
+  const router = useRouter();
   const [partNumber, setPartNumber] = useState('')
   const [brandAAIAID, setBrandAAIAID] = useState('')
   const [partTerminologyID, setPartTerminologyID] = useState('')
@@ -45,6 +46,8 @@ export default function PartsForm() {
       setBrandAAIAID('')
       setPartTerminologyID('')
     }
+
+    router.push(`/dashboard/edit?pn=${partNumber}&brand=${brandAAIAID}`)
   }
 
   return (
