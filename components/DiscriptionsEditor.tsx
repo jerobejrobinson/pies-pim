@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import { Pencil, Plus, X, Trash2 } from 'lucide-react'
 import CDATARenderer from '@/components/CDATARender'
+import anyAscii from 'any-ascii';
 
 export default function DescriptionsEditor({ partNumber, brandAAIAID }: {partNumber: string; brandAAIAID: string}) {
   const [descriptions, setDescriptions] = useState<any>([])
@@ -144,10 +145,12 @@ export default function DescriptionsEditor({ partNumber, brandAAIAID }: {partNum
           <Label htmlFor="text">Description Text</Label>
           <Textarea
             id="text"
-            value={newDescription._text}
-            onChange={(e) => setNewDescription({...newDescription, _text: e.target.value})}
+            value={anyAscii(newDescription._text)}
+            onChange={(e) => setNewDescription({...newDescription, _text: anyAscii(e.target.value)})}
             className="mb-2"
+            maxLength={newDescription._descriptioncode == 'DES' ? 80 : 2000}
           />
+          <p className=' text-sm font-light'>* Editor will automatically convert nonAscii characters into valid characters</p>
           <Label htmlFor="code">Description Code</Label>
           <Input
             id="code"
@@ -155,6 +158,7 @@ export default function DescriptionsEditor({ partNumber, brandAAIAID }: {partNum
             onChange={(e) => setNewDescription({...newDescription, _descriptioncode: e.target.value})}
             className="mb-2"
           />
+          <p className=' text-sm font-light'>* DES has a character limit of 80; MKT has a character limit of 2000</p>
           <div className="flex justify-end gap-2 mt-2">
             <Button onClick={() => setIsEditing(false)}>Cancel</Button>
             <Button onClick={handleSave}>Save</Button>
