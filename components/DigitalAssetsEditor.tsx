@@ -231,7 +231,7 @@ export default function DigitalAssetsEditor({ partNumber, brandAAIAID }: { partN
                                     alt={`Thumbnail for ${asset.filename}`}
                                     width={64}
                                     height={64}
-                                    objectFit="cover"
+                                    style={{objectFit:"cover"}}
                                 />
                             </div>
                         ) : (

@@ -11,7 +11,7 @@ const defaultUrl = process.env.VERCEL_URL
 export const metadata = {
   metadataBase: new URL(defaultUrl),
   title: "PIM - MSP Diesel Solutions",
-  description: "Internal Tool to manage product data and XML file generator",
+  description: "Internal Tool to manage product data and an ACES/PIES XML file generator",
 };
 
 export default function RootLayout({

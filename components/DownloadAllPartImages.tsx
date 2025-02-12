@@ -87,7 +87,7 @@ export default function AllPartImagesDownload() {
   }
 
   return (
-    <div className="space-y-4 max-w-md mx-auto">
+    <div className="space-y-4 w-full xl:mx-auto">
       <Button 
         onClick={handleDownload} 
         disabled={isLoading}
@@ -95,7 +95,7 @@ export default function AllPartImagesDownload() {
         variant={'secondary'}
       >
         <Download className="mr-2 h-4 w-4" /> 
-        {isLoading ? 'Preparing Download...' : 'Download All Part Images'}
+        {isLoading ? 'Preparing Images Download...' : 'Images'}
       </Button>
     </div>
   )

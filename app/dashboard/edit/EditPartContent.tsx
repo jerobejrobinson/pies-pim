@@ -11,6 +11,7 @@ import DescriptionsEditor from '@/components/DiscriptionsEditor'
 import PartInterchangeEditor from '@/components/PartInterchangeEditor'
 import DigitalAssetsEditor from '@/components/DigitalAssetsEditor'
 import PackagesEditor from '@/components/PackagesEditor'
+import VehicleEditor from '@/components/VehicleEditor'
 
 export default function EditPartContent() {
   const [part, setPart] = useState<any>(null)
@@ -146,6 +147,10 @@ export default function EditPartContent() {
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-xl font-semibold mb-4">Package Information</h2>
           <PackagesEditor partNumber={partNumber} brandAAIAID={brandAAIAID} />
+        </div>
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h2 className="text-xl font-semibold mb-4">Vehicle Information</h2>
+          <VehicleEditor partNumber={partNumber} brandAAIAID={brandAAIAID} />
         </div>
       </div>
     </div>

@@ -16,6 +16,10 @@ export default function XMLPartDataDownload() {
 
   const convertSupabaseToOriginal = (supabaseData: any[]) => {
     return {
+      "?xml": {
+        "@_version": "1.0",
+        "@_encoding": "utf-8"
+      },
       "PIES": {
         "Header": {
           "PIESVersion": 7.2,
@@ -190,7 +194,7 @@ export default function XMLPartDataDownload() {
   }
 
   return (
-    <div className="space-y-4 max-w-md mx-auto">
+    <div className="space-y-4 w-full xl:mx-auto">
       <Button 
         onClick={handleDownload} 
         disabled={isLoading}
@@ -198,7 +202,7 @@ export default function XMLPartDataDownload() {
         variant={'secondary'}
       >
         <Download className="mr-2 h-4 w-4" /> 
-        {isLoading ? 'Preparing XML...' : 'Download Parts XML'}
+        {isLoading ? 'Preparing PIES DATA...' : 'PIES Data'}
       </Button>
     </div>
   )
