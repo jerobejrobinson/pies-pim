@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PIES xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.autocare.org">
+  <Header>
+    <PIESVersion>7.2</PIESVersion>
+    <SubmissionType>FULL</SubmissionType>
+    <TechnicalContact>MSP Diesel - Tim Rickman</TechnicalContact>
+    <ContactEmail>trickman@mspdieselsolutions.com</ContactEmail>
+    <PCdbVersionDate>2023-03-30</PCdbVersionDate>
+  </Header>
+  <Items>
+    <Item MaintenanceType="A">
+      <PartNumber>test2</PartNumber>
+      <BrandAAIAID>BDZW</BrandAAIAID>
+      <PartTerminologyID>5764</PartTerminologyID>
+      <DigitalAssets>
+        <DigitalFileInformation MaintenanceType="A">
+          <FileName>881027-5001SBDZW/fmlbfn46orp.png</FileName>
+          <FileType>png</FileType>
+          <AssetType>P01</AssetType>
+        </DigitalFileInformation>
+      </DigitalAssets>
+      <Packages>
+        <Package MaintenanceType="A">
+          <QuantityofEaches>1</QuantityofEaches>
+          <PackageUOM>EA</PackageUOM>
+          <Dimensions UOM="IN">
+            <MerchandisingHeight>11.99</MerchandisingHeight>
+            <MerchandisingWidth>9.99</MerchandisingWidth>
+            <MerchandisingLength>8.99</MerchandisingLength>
+            <ShippingHeight>11.99</ShippingHeight>
+            <ShippingWidth>9.99</ShippingWidth>
+            <ShippingLength>8.99</ShippingLength>
+          </Dimensions>
+          <Weights UOM="PG">
+            <Weight>14.99</Weight>
+            <DimensionalWeight>7.7469</DimensionalWeight>
+          </Weights>
+        </Package>
+      </Packages>
+    </Item>
+    <Item MaintenanceType="A">
+      <PartNumber>test1</PartNumber>
+      <BrandAAIAID>BDZW</BrandAAIAID>
+      <PartTerminologyID>5764</PartTerminologyID>
+      <Descriptions>
+        <Description DescriptionCode="DES" MaintenanceType="A" LanguageCode="EN">Garrett PowerMax
+          Stage 2 Turbo (Left) for 2017-2021 F-150/Raptor 3.5L EcoBoost</Description>
+        <Description DescriptionCode="MKT" MaintenanceType="A" LanguageCode="EN">The Garrett
+          PowerMax Stage 2 Turbocharger Upgrade (Part Number: 901654-5001W) is designed to enhance
+          the performance of 2017-2021 Ford F-150 and F-150 Raptor models equipped with the 3.5L
+          EcoBoost engine. This upgrade serves as a direct drop-in replacement for the factory
+          turbocharger on the left (driver&apos;s) side, offering a significant increase in airflow
+          and efficiency while maintaining OEM installation specifications.</Description>
+      </Descriptions>
+      <DigitalAssets>
+        <DigitalFileInformation MaintenanceType="A">
+          <FileName>901654-5001WBDZW/pvlh2ob019m.jpg</FileName>
+          <FileType>jpg</FileType>
+          <AssetType>P04</AssetType>
+        </DigitalFileInformation>
+        <DigitalFileInformation MaintenanceType="A">
+          <FileName>901654-5001WBDZW/testimg2.jpg</FileName>
+          <FileType>jpg</FileType>
+          <AssetType>P10</AssetType>
+        </DigitalFileInformation>
+      </DigitalAssets>
+      <Packages>
+        <Package MaintenanceType="A">
+          <QuantityofEaches>1</QuantityofEaches>
+          <PackageUOM>EA</PackageUOM>
+          <Dimensions UOM="IN">
+            <MerchandisingHeight>11.99</MerchandisingHeight>
+            <MerchandisingWidth>9.99</MerchandisingWidth>
+            <MerchandisingLength>8.99</MerchandisingLength>
+            <ShippingHeight>11.99</ShippingHeight>
+            <ShippingWidth>9.99</ShippingWidth>
+            <ShippingLength>8.99</ShippingLength>
+          </Dimensions>
+          <Weights UOM="PG">
+            <Weight>18.99</Weight>
+            <DimensionalWeight>7.7469</DimensionalWeight>
+          </Weights>
+        </Package>
+      </Packages>
+    </Item>
+    <Item MaintenanceType="A">
+      <PartNumber>PFB103</PartNumber>
+      <BrandAAIAID>BBRH</BrandAAIAID>
+      <PartTerminologyID>16168</PartTerminologyID>
+      <Descriptions>
+        <Description DescriptionCode="DES" MaintenanceType="A" LanguageCode="EN">NEW FUEL TRANSFER
+          UNIT</Description>
+      </Descriptions>
+      <PartInterchangeInfo>
+        <PartInterchange MaintenanceType="A" LanguageCode="EN" BrandAAIAID="CNWR">
+          <PartNumber>BC3Z9G282E</PartNumber>
+        </PartInterchange>
+        <PartInterchange MaintenanceType="A" LanguageCode="EN" BrandAAIAID="CLVL">
+          <PartNumber>AP63527</PartNumber>
+        </PartInterchange>
+      </PartInterchangeInfo>
+      <DigitalAssets>
+        <DigitalFileInformation MaintenanceType="A">
+          <FileName>PFB103BBRH/i7p7osmjt4.jpg</FileName>
+          <FileType>jpg</FileType>
+          <AssetType>P04</AssetType>
+        </DigitalFileInformation>
+      </DigitalAssets>
+      <Packages>
+        <Package MaintenanceType="A">
+          <QuantityofEaches>1</QuantityofEaches>
+          <PackageUOM>EA</PackageUOM>
+          <Dimensions UOM="IN">
+            <MerchandisingHeight>6.5</MerchandisingHeight>
+            <MerchandisingWidth>6.5</MerchandisingWidth>
+            <MerchandisingLength>12.75</MerchandisingLength>
+            <ShippingHeight>6.5</ShippingHeight>
+            <ShippingWidth>6.5</ShippingWidth>
+            <ShippingLength>12.75</ShippingLength>
+          </Dimensions>
+          <Weights UOM="PG">
+            <Weight>4.04</Weight>
+            <DimensionalWeight>3.875</DimensionalWeight>
+          </Weights>
+        </Package>
+      </Packages>
+    </Item>
+  </Items>
+  <Trailer>
+    <ItemCount>3</ItemCount>
+    <TransactionDate>2025-02-12</TransactionDate>
+  </Trailer>
+</PIES>
