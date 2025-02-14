@@ -50,13 +50,11 @@ export default function UploadPIESFile() {
     const handleFilePIESChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             setFilePIES(e.target.files[0])
-            console.log(e.target.files[0])
         }
     }
     const handleFileZIPChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             setFileZIP(e.target.files[0])
-            console.log(e.target.files[0])
         }
     }
 
@@ -80,11 +78,11 @@ export default function UploadPIESFile() {
         data.append('name', 'image-zip')
         const res = await fetch('http://localhost:3001/pim/upload', {
             method: "POST",
-            body: data,
-            mode: 'no-cors'
-        }).then((res) => res.json())
-        console.log(res)
+            body: data
+        }).then((res) => res.json()).then(data => data).catch(err => err)
+        return res
     }
+
     const handleImport = async () => {
         if (!filePIES || !fileZIP) {
             toast({
@@ -92,7 +90,7 @@ export default function UploadPIESFile() {
                 description: "Please upload both a PIES file and a ZIP to import.",
                 variant: "destructive",
             })
-            return
+            return;
         }
 
         setImporting(true)
@@ -100,12 +98,13 @@ export default function UploadPIESFile() {
         setFailedImports([])
         try {
             // const parsedPIESData = await parsePIESFile(filePIES)
-            const extractedZIPData = await uploadZIPFile(filePIES, fileZIP)
+            const res = await uploadZIPFile(filePIES, fileZIP)
             // const results = await importPartInterchanges(interchanges)
             // setImportResults(results)
+            console.log(res)
             toast({
                 title: "Import Complete",
-                // description: `Successfully imported ${results.success} part interchanges. ${results.failed} failed.`,
+                description: `Successfully imported ${res.success} part interchanges.`,
             })
         } catch (error) {
             console.error('Import failed:', error)

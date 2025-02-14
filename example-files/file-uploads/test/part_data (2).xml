@@ -10,7 +10,7 @@
   </Header>
   <Items>
     <Item MaintenanceType="A">
-      <PartNumber>test2</PartNumber>
+      <PartNumber>TEST2</PartNumber>
       <BrandAAIAID>BDZW</BrandAAIAID>
       <PartTerminologyID>5764</PartTerminologyID>
       <DigitalAssets>
@@ -40,7 +40,7 @@
       </Packages>
     </Item>
     <Item MaintenanceType="A">
-      <PartNumber>test1</PartNumber>
+      <PartNumber>TEST1</PartNumber>
       <BrandAAIAID>BDZW</BrandAAIAID>
       <PartTerminologyID>5764</PartTerminologyID>
       <Descriptions>
@@ -85,7 +85,7 @@
       </Packages>
     </Item>
     <Item MaintenanceType="A">
-      <PartNumber>PFB103</PartNumber>
+      <PartNumber>PFB1034</PartNumber>
       <BrandAAIAID>BBRH</BrandAAIAID>
       <PartTerminologyID>16168</PartTerminologyID>
       <Descriptions>
