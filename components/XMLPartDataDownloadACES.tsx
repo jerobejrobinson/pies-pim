@@ -24,12 +24,13 @@ export default function XMLPartDataDownloadACES() {
                 "Header": {
                     "Company": "MSP Diesel Solutions",
                     "SenderName": "Jerobe Robinson",
+                    "SenderPhone": "9013-302-4488",
                     "DocumentTitle": "PIM_ACES_MSP",
                     "PCdbVersionDate": "2024-12-19",
                     "VcdbVersionDate": "2024-12-19",
                     "QdbVersionDate": "2024-12-19",
                     "PartsApprovedFor": {
-                        "Cuountry": "US"
+                        "Country": "US"
                     },
                     "EffectiveDate": `${date.toISOString().split('T')[0]}`,
                     "SubmissionType": "Full",
@@ -45,7 +46,9 @@ export default function XMLPartDataDownloadACES() {
                         "#text": part.parts.partnumber,
                         "@_BrandAAIAID": part.parts.brandaaiaid
                     },
-                    
+                    "PartType": {
+                      "@_id": part.parts.partterminologyid 
+                    },
                     "Qty": 1,
                     "@_action": "A",
                     "@_id": part.id
