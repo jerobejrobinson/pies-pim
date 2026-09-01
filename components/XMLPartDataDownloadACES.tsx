@@ -18,13 +18,14 @@ export default function XMLPartDataDownloadACES() {
         let date = new Date()
         return {
             "?xml": {
-                "@_version": "1.0"
+                "@_version": "1.0",
+                "@_encoding": "UTF-8"
             },
             "ACES": {
                 "Header": {
                     "Company": "MSP Diesel Solutions",
                     "SenderName": "Jerobe Robinson",
-                    "SenderPhone": "9013-302-4488",
+                    "SenderPhone": "901-302-4488",
                     "DocumentTitle": "PIM_ACES_MSP",
                     "PCdbVersionDate": "2024-12-19",
                     "VcdbVersionDate": "2024-12-19",
@@ -51,7 +52,8 @@ export default function XMLPartDataDownloadACES() {
                     },
                     "Qty": 1,
                     "@_action": "A",
-                    "@_id": part.id
+                    "@_id": part.id,
+                    "@_validate": "yes"
                 }
 
                 return XMLObject;
@@ -60,7 +62,7 @@ export default function XMLPartDataDownloadACES() {
               "RecordCount": supabaseData.length,
             },
             "@_xmlns:xsi": "http://www.w3.org/2001/XMLSchema",
-            "@_version":"4.0"
+            "@_version":"4.2"
           }
         };
     }
